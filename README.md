@@ -1,10 +1,5 @@
-<p align="center">
-    <a hrer="">
-        <img src="" alt="Moon in the Dark">
-    </a>
-</p>
 <h1 align="center">
-    <b>MITD MANAGEMENT SYSTEM FRONT-END</b>
+    <b>MOON IN THE DARK<br/>OPERATING SYSTEM FRONT-END</b>
 </h1>
 <div align="center">
 
@@ -14,14 +9,14 @@
 
 ---
 ## Version
-    - node : 16.11.1
-    - yarn : 1.22.10
-    - typescript : 4.4.4
-    - react : 17.0.25
-    - react redux : 7.2.5
+    - node : 20.11.1
+    - yarn : 1.22.21
+    - typescript : 4.4.2
+    - react : 18.2.0
+    - react redux : 9.1.0
     - react toolkit : 1.6.2
-    - material ui : 5.0.3
-    - axios : 0.23.0
+    - material ui : 5.15.11
+    - axios : 1.6.7
 
 ---
 
