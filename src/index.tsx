@@ -1,16 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+import * as serviceWorker from './serviceWorker';
+import 'nprogress/nprogress.css';
+import { store } from "src/app/store";
+import App from './App';
+import { createRoot } from "react-dom/client";
+
+const container = document.getElementById('root');
+const root = createRoot(container);
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <Provider store={store}>
+            <HelmetProvider>
+                <BrowserRouter>
+                    <App/>
+                </BrowserRouter>
+            </HelmetProvider>
+        </Provider>
+    </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+serviceWorker.unregister();
