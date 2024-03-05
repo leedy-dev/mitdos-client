@@ -67,7 +67,7 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '',
-        element: <Navigate to={'login'} replace />,
+        element: <Navigate to={'dashboards'} replace />,
       },
       {
         path: 'status',
@@ -97,15 +97,6 @@ const routes: RouteObject[] = [
       {
         path: '*',
         element: <Status404 />,
-      },
-    ],
-  },
-  {
-    path: 'login',
-    children: [
-      {
-        path: '',
-        element: <Login />,
       },
     ],
   },
@@ -231,6 +222,32 @@ const routes: RouteObject[] = [
         element: <APITest />,
       },
     ],
+  },
+
+  /* MITD OS */
+  {
+    path: 'mitd',
+    element: <BaseLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to={'dashboards'} replace />
+      },
+      {
+        path: 'login',
+        element: <Login />
+      },
+      {
+        path: 'dashboards',
+        element: <SidebarLayout />,
+        children: [
+          {
+            path: '',
+            element: <Dashboards />
+          }
+        ]
+      }
+    ]
   },
 ];
 

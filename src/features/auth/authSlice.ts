@@ -3,7 +3,6 @@ import { RootState } from 'src/app/store';
 import { LoginData } from 'src/models/datas/dataModel';
 import { AuthState } from 'src/models/states/stateModel';
 import { logIn, logOut } from "src/services/authApi";
-import { AsyncThunkOptions } from "@reduxjs/toolkit/dist/createAsyncThunk";
 
 const initialState: AuthState = {
     accessToken: null,

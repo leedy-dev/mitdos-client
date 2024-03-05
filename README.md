@@ -1,5 +1,5 @@
 <h1 align="center">
-    <b>MOON IN THE DARK<br/>OPERATING SYSTEM FRONT-END</b>
+    <b>DY-DEV SYSTEM FRONT-END</b>
 </h1>
 <div align="center">
 
