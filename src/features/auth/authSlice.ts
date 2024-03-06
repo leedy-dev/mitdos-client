@@ -2,28 +2,28 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/app/store';
 import { LoginData } from 'src/models/datas/dataModel';
 import { AuthState } from 'src/models/states/stateModel';
-import { logIn, logOut } from "src/services/authApi";
+import { signIn, signOut } from "src/services/authApi";
 
 const initialState: AuthState = {
     accessToken: null,
     status: 'idle',
 };
 
-const loginAsync = createAsyncThunk(
-    'user/login',
+export const loginAsync = createAsyncThunk(
+    'auth/sign-in',
     async (data: LoginData, { rejectWithValue }) => {
         try {
-            return await logIn(data);
+            return signIn(data)
         } catch (err) {
             return rejectWithValue(err);
         }
     });
 
-const logOutAsync = createAsyncThunk(
-    'user/logout',
-    async (data: LoginData, { rejectWithValue }) => {
+export const logOutAsync = createAsyncThunk(
+    'auth/sign-out',
+    async (data, { rejectWithValue }) => {
         try {
-            return await logOut(data);
+            return signOut()
         } catch (err) {
             return rejectWithValue(err);
         }
@@ -40,19 +40,19 @@ export const authSlice = createSlice({
             })
             .addCase(loginAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
-                state.accessToken += action.payload;
+                state.accessToken = action.payload.data.accessToken;
             })
-            .addCase(loginAsync.rejected, (state, action) => {
+            .addCase(loginAsync.rejected, state => {
                 state.status = 'failed';
             })
             .addCase(logOutAsync.pending, state => {
                 state.status = 'loading';
             })
-            .addCase(logOutAsync.fulfilled, (state, action) => {
+            .addCase(logOutAsync.fulfilled, state => {
                 state.status = 'idle';
-                state.accessToken = '';
+                state.accessToken = null;
             })
-            .addCase(logOutAsync.rejected, (state, action) => {
+            .addCase(logOutAsync.rejected, state => {
                 state.status = 'failed';
             });
     },

@@ -1,9 +1,13 @@
 import { Button } from "@mui/material";
 import React, { useState } from 'react';
 import apiClient from "src/services/lib/mitdAxios";
+import { useAppDispatch } from "src/app/hooks";
+import { loginAsync, logOutAsync } from "src/features/auth/authSlice";
 
 function Test(props) {
     const [images, setImages] = useState<{ korFile: File, engFile: File, chiFile: File, jpnFile: File }>();
+
+    const dispatch = useAppDispatch();
 
     const onSubmit = () => {
         const submitFormData = new FormData();
@@ -19,6 +23,24 @@ function Test(props) {
             .then(r => console.log(r));
     }
 
+    const onClickSignIn = async () => {
+        const testData = {
+            userId: 'admin01',
+            password: '123'
+        }
+
+        await dispatch(loginAsync(testData));
+    }
+
+    const onClickSignOut = async () => {
+        await dispatch(logOutAsync());
+    }
+
+    const onClickApiTest = () => {
+        apiClient.post("/auth/test")
+            .then(r => console.log(r));
+    }
+
     return (
         <div>
             <input type={'file'} onChange={e => setImages({ ...images, korFile: e.target.files[0] })} /><br/><br/>
@@ -26,6 +48,9 @@ function Test(props) {
             <input type={'file'} onChange={e => setImages({ ...images, chiFile: e.target.files[0] })} /><br/><br/>
             <input type={'file'} onChange={e => setImages({ ...images, jpnFile: e.target.files[0] })} /><br/><br/>
             <Button onClick={onSubmit}>SUBMIT</Button>
+            <Button onClick={onClickSignIn}>SIGN-IN</Button>
+            <Button onClick={onClickSignOut}>SIGN-OUT</Button>
+            <Button onClick={onClickApiTest}>API TEST</Button>
         </div>
     );
 }

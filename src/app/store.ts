@@ -1,16 +1,15 @@
-import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import userReducer from 'src/features/user/userSlice';
 import authReducer from 'src/features/auth/authSlice';
 import configReducer from 'src/features/config/configSlice';
 
-const RootReducer = combineReducers({
-  auth: authReducer,
-  user: userReducer,
-  config: configReducer,
-});
-
 export const store = configureStore({
-  reducer: RootReducer,
+  reducer: {
+    auth: authReducer,
+    user: userReducer,
+    config: configReducer,
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type AppDispatch = typeof store.dispatch;

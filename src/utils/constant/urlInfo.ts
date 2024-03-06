@@ -31,6 +31,12 @@ const URL_INFO = {
 
   // API URL 정의
   API_V1: {
+    // 로그인
+    SIGN_IN_URL: '/auth/sign-in',
+    // 로그아웃
+    SIGN_OUT_URL: '/auth/sign-out',
+    // 토큰 재발급
+    REISSUE_URL: '/auth/reissue',
     //다국어샘플
     SAMPLE_LANGUAGE: CONSTANTS.API_V1_BASE_URL + '/api/sample/language',
     //메뉴트리

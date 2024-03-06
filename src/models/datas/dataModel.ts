@@ -5,7 +5,7 @@ export interface ResponseData<T> {
 }
 
 export interface LoginData {
-  username: string;
+  userId: string;
   password: string;
 }
 
