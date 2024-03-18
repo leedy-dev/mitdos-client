@@ -1,3 +1,7 @@
+export const hasText = (text: string) => {
+    return (text && text === '');
+}
+
 //시,분 형태 정규화
 export function timePattern(time) {
     let changeTime = time.replaceAll('_', '0'); //check 공백

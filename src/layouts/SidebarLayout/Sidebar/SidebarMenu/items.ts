@@ -18,6 +18,7 @@ import TableRowsIcon from '@mui/icons-material/TableRows';
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
 
+
 export interface MenuItem {
   link?: string;
   icon?: ReactNode | OverridableComponent<SvgIconTypeMap>;
@@ -29,6 +30,7 @@ export interface MenuItem {
 export interface MenuItems {
   items: MenuItem[];
   heading: string;
+
 }
 
 const menuItems: MenuItems[] = [

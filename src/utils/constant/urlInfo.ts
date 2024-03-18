@@ -37,6 +37,10 @@ const URL_INFO = {
     SIGN_OUT_URL: '/auth/sign-out',
     // 토큰 재발급
     REISSUE_URL: '/auth/reissue',
+
+    // 메뉴 조회
+    MENU_URL: '/menu',
+
     //다국어샘플
     SAMPLE_LANGUAGE: CONSTANTS.API_V1_BASE_URL + '/api/sample/language',
     //메뉴트리

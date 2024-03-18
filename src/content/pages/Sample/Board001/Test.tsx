@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import apiClient from "src/services/lib/mitdAxios";
 import { useAppDispatch } from "src/app/hooks";
 import { loginAsync, logOutAsync } from "src/features/auth/authSlice";
+import { getMenuAsync } from "../../../../features/menu/menuSlice";
 
 function Test(props) {
     const [images, setImages] = useState<{ korFile: File, engFile: File, chiFile: File, jpnFile: File }>();
@@ -41,6 +42,15 @@ function Test(props) {
             .then(r => console.log(r));
     }
 
+    const onClickGetMenuList = async () => {
+        const data = {
+            auth: 'ROLE_USER',
+            level: 1
+        }
+
+        await dispatch(getMenuAsync(data));
+    }
+
     return (
         <div>
             <input type={'file'} onChange={e => setImages({ ...images, korFile: e.target.files[0] })} /><br/><br/>
@@ -51,6 +61,7 @@ function Test(props) {
             <Button onClick={onClickSignIn}>SIGN-IN</Button>
             <Button onClick={onClickSignOut}>SIGN-OUT</Button>
             <Button onClick={onClickApiTest}>API TEST</Button>
+            <Button onClick={onClickGetMenuList}>MENU LIST</Button>
         </div>
     );
 }

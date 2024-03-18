@@ -1,8 +1,12 @@
-import { ListSubheader, List } from '@mui/material';
-import { useLocation, matchPath } from 'react-router-dom';
+import { List, ListSubheader } from '@mui/material';
+import { matchPath, useLocation } from 'react-router-dom';
 import SidebarMenuItem from './item';
-import menuItems, { MenuItem } from './items';
+import { MenuItem } from './items';
 import { styled } from '@mui/material/styles';
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { getMenuAsync } from "../../../../features/menu/menuSlice";
+import { MenuData } from "../../../../models/datas/dataModel";
 
 
 const MenuWrapper = styled(List)(
@@ -125,6 +129,72 @@ const SubMenuWrapper = styled(List)(
 `
 );
 
+const renderSidebarMenuData = ({
+  items,
+  path
+}: {
+  items: MenuData[];
+  path: string;
+}): JSX.Element => (
+    <SubMenuWrapper>
+      {items.reduce((ev, item) => reduceChildRoutesData({ ev, item, path }), [])}
+    </SubMenuWrapper>
+);
+
+const reduceChildRoutesData = ({
+  ev,
+  path,
+  item
+}: {
+  ev: JSX.Element[];
+  path: string;
+  item: MenuData;
+}): Array<JSX.Element> => {
+  const key = item.menuId;
+
+  const exactMatch = item.url ? !!matchPath({
+    path: item.url,
+    end: true
+  }, path) : false;
+
+  if (item.subMenus) {
+    const partialMatch = item.url ? !!matchPath({
+      path: item.url,
+      end: false
+    }, path) : false;
+
+    ev.push(
+        <SidebarMenuItem
+            key={key}
+            active={partialMatch}
+            open={partialMatch}
+            name={item.menuName}
+            icon={item.icon}
+            link={item.url}
+            badge={item.badge}
+        >
+          {renderSidebarMenuData({
+            path,
+            items: item.subMenus
+          })}
+        </SidebarMenuItem>
+    );
+  } else {
+    ev.push(
+        <SidebarMenuItem
+            key={key}
+            active={exactMatch}
+            name={item.menuName}
+            link={item.url}
+            badge={item.badge}
+            icon={item.icon}
+        />
+    );
+  }
+
+  return ev;
+}
+
 const renderSidebarMenuItems = ({
   items,
   path
@@ -194,9 +264,34 @@ const reduceChildRoutes = ({
 function SidebarMenu() {
   const location = useLocation();
 
+  const dispatch = useAppDispatch();
+  const menuList: MenuData[] = useAppSelector(state => state.menu.menuList);
+
+  useEffect(() => {
+    const searchData = {
+      auth: 'ROLE_USER',
+      level: 1
+    }
+
+    dispatch(getMenuAsync(searchData));
+  }, []);
+
   return (
     <>
-      {menuItems.map((section) => (
+      {menuList.map(menu => (
+          <MenuWrapper
+              key={menu.menuId}
+              subheader={
+                <ListSubheader component="div" disableSticky>{menu.menuName}</ListSubheader>
+              }
+          >
+            {renderSidebarMenuData({
+              items: menu.subMenus,
+              path: location.pathname
+            })}
+          </MenuWrapper>
+      ))}
+      {/*{menuItems.map((section) => (
         <MenuWrapper
           key={section.heading}
           subheader={
@@ -208,7 +303,7 @@ function SidebarMenu() {
             path: location.pathname
           })}
         </MenuWrapper>
-      ))}
+      ))}*/}
     </>
   );
 }

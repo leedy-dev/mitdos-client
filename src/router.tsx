@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import APITest from './content/pages/Sample/APITest';
 import EditBoardPage from './content/pages/Sample/Board001/EditBoardPage';
@@ -8,13 +8,6 @@ import SidebarLayout from './layouts/SidebarLayout';
 import BaseLayout from './layouts/BaseLayout';
 
 import SuspenseLoader from './components/SuspenseLoader';
-/*
-const Loader = Component => props => (
-  <Suspense fallback={<SuspenseLoader />}>
-    <Component {...props} />
-  </Suspense>
-);
-*/
 
 function Loader(Component) {
   return function LoaderComp(props) {
@@ -26,7 +19,12 @@ function Loader(Component) {
   };
 }
 
+// Login
+
+const Login = Loader(lazy(() => import('./content/applications/Users/login')));
+
 // Dashboards
+
 const Dashboards = Loader(lazy(() => import('./content/dashboards/Crypto')));
 
 // Applications
@@ -35,7 +33,6 @@ const Messenger = Loader(lazy(() => import('./content/applications/Messenger')))
 const Transactions = Loader(lazy(() => import('./content/applications/Transactions')));
 const UserProfile = Loader(lazy(() => import('./content/applications/Users/profile')));
 const UserSettings = Loader(lazy(() => import('./content/applications/Users/settings')));
-const Login = Loader(lazy(() => import('./content/applications/Users/login')));
 
 // Components
 
@@ -60,7 +57,24 @@ const StatusMaintenance = Loader(lazy(() => import('./content/pages/Status/Maint
 // Sample
 const Board001 = Loader(lazy(() => import('./content/pages/Sample/Board001')));
 
-const routes: RouteObject[] = [
+export const loginRoutes : RouteObject[] = [
+  {
+    path: '*',
+    element: <BaseLayout />,
+    children: [
+      {
+        path: 'login',
+        element: <Login />
+      },
+      {
+        path: '*',
+        element: <Navigate to={'login'} replace />
+      }
+    ]
+  }
+];
+
+export const routes: RouteObject[] = [
   {
     path: '*',
     element: <BaseLayout />,
@@ -68,6 +82,10 @@ const routes: RouteObject[] = [
       {
         path: '',
         element: <Navigate to={'dashboards'} replace />,
+      },
+      {
+        path: 'login',
+        element: <Navigate to={'../dashboards'} replace />,
       },
       {
         path: 'status',
@@ -250,5 +268,3 @@ const routes: RouteObject[] = [
     ]
   },
 ];
-
-export default routes;

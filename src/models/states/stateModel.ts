@@ -1,8 +1,11 @@
+import { MenuData } from "../datas/dataModel";
+
 interface StateStatus {
   status: 'idle' | 'loading' | 'failed';
 }
 
 export interface AuthState extends StateStatus {
+  isAuthenticated: boolean;
   accessToken: string | null;
 }
 
@@ -12,6 +15,10 @@ export interface UserState extends StateStatus {
   regDate: string;
   updDate: string;
   userProfile: string;
+}
+
+export interface MenuState extends StateStatus {
+  menuList: MenuData[];
 }
 
 export interface ConfigState {

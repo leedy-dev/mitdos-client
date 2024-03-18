@@ -1,15 +1,8 @@
-import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  styled,
-  TextField,
-  Typography
-} from "@mui/material";
-import React, {useState} from "react";
+import { Box, Button, Card, Checkbox, FormControlLabel, Grid, styled, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { loginAsync } from "../../../../features/auth/authSlice";
+import { useAppDispatch } from "../../../../app/hooks";
+import { hasText } from "../../../../utils/stringUtils";
 
 /* style (s) */
 const LoginTextField = styled(TextField)`
@@ -25,36 +18,63 @@ const ButtonBox = styled(Box)`
 /* type(s) */
 interface UserInfoTypes {
   userId: string;
-  userPwd: string;
+  password: string;
 }
 /* type(e) */
 
 function LoginForm() {
+  const dispatch = useAppDispatch();
+
   const [idSaveYn, setIdSaveYn] = useState(false);
 
   const [userInfo, setUserInfo] = useState<UserInfoTypes>({
     userId: "",
-    userPwd: ""
+    password: ""
   });
 
   // input box control
-  const handleInputBlur = e => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     if(name === 'id') {
       setUserInfo({...userInfo, userId: value});
     } else if (name === 'pwd') {
-      setUserInfo({...userInfo, userPwd: value});
+      setUserInfo({...userInfo, password: value});
     }
   }
 
   // 로그인 버튼 클릭
   const handleLoginButton = () => {
-    alert("id: " + userInfo.userId + "\npwd: " + userInfo.userPwd);
+    if (hasText(userInfo.userId)) {
+      alert('아이디를 입력하세요');
+      return;
+    }
+    if (hasText(userInfo.password)) {
+      alert('비밀번호를 입력하세요');
+      return;
+    }
+
+    onClickSignIn()
   }
   
   // 회원가입 버튼 클릭
   const handleSignUpButton = () => {
     alert("모달 띄우기");
+  }
+
+  const handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      onClickSignIn();
+    }
+  }
+
+  const onClickSignIn = () => {
+    dispatch(loginAsync(userInfo))
+        .then(res => {
+          console.log(res);
+          if (res.payload['response'].status === 400) {
+            alert(res.payload['response'].data.message);
+          }
+        });
   }
   
   return (
@@ -67,11 +87,11 @@ function LoginForm() {
               </Typography>
               <Box p={1}>
                 <Typography variant="h4">아이디</Typography>
-                <LoginTextField type="text" name="id" onBlur={handleInputBlur} />
+                <LoginTextField type="text" name="id" onChange={handleInputChange} onKeyPress={handleKeyPress} />
               </Box>
               <Box p={1}>
                 <Typography variant="h4">비밀번호</Typography>
-                <LoginTextField type="password" name="pwd" onBlur={handleInputBlur} />
+                <LoginTextField type="password" name="pwd" onChange={handleInputChange} onKeyPress={handleKeyPress} />
               </Box>
               <Box p={1}>
                 <FormControlLabel

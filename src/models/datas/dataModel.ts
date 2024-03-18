@@ -17,6 +17,24 @@ export interface UserData {
   userProfile: string;
 }
 
+export interface MenuData {
+  menuId: number;
+  upperMenuId: number;
+  menuName: string;
+  auth: string;
+  url?: string;
+  level: number;
+  index: number;
+  icon?: string;
+  badge?: string;
+  subMenus?: MenuData[];
+}
+
+export interface MenuSearchData {
+  auth: string;
+  level?: number;
+}
+
 // Sample
 export interface PagingInfo {
   size?: number;
