@@ -70,10 +70,12 @@ function LoginForm() {
   const onClickSignIn = () => {
     dispatch(loginAsync(userInfo))
         .then(res => {
-          console.log(res);
-          if (res.payload['response'].status === 400) {
-            alert(res.payload['response'].data.message);
+          const response = res.payload['response'];
+
+          if (response && response.status === 400) {
+            alert(response.data.message);
           }
+
         });
   }
   

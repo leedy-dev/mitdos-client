@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 
@@ -9,6 +9,7 @@ import ThemeProvider from './theme/ThemeProvider';
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { loginRoutes, routes } from "./router";
 import { reissueAsync } from "./features/auth/authSlice";
+import { AuthState } from "./models/states/stateModel";
 
 const App = () => {
   const content = useRoutes(routes);
@@ -16,20 +17,22 @@ const App = () => {
 
   const dispatch = useAppDispatch();
 
-  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  const authSelector = useAppSelector<AuthState>(state => state.auth);
 
   useEffect(() => {
-    if (!isAuthenticated) dispatch(reissueAsync());
-  }, [isAuthenticated]);
+      if (!authSelector.isAuthenticated) {
+          dispatch(reissueAsync());
+      }
+  }, [dispatch]);
 
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         {
-          isAuthenticated
-            ? content
-            : loginContent
+            authSelector.isAuthenticated
+                ? content
+                : loginContent
         }
       </LocalizationProvider>
     </ThemeProvider>

@@ -5,8 +5,8 @@ interface StateStatus {
 }
 
 export interface AuthState extends StateStatus {
+  isLogout: boolean;
   isAuthenticated: boolean;
-  accessToken: string | null;
 }
 
 export interface UserState extends StateStatus {

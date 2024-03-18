@@ -6,9 +6,9 @@ import { reissue, signIn, signOut } from "src/services/authApi";
 import apiClient from "../../services/lib/mitdAxios";
 
 const initialState: AuthState = {
+    isLogout: false,
     isAuthenticated: false,
-    accessToken: null,
-    status: 'idle',
+    status: 'idle'
 };
 
 export const loginAsync = createAsyncThunk(
@@ -56,7 +56,12 @@ export const authSlice = createSlice({
             })
             .addCase(loginAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
-                setAuth(state, action);
+
+                if (action.payload && action.payload.status === 200 && action.payload.data.accessToken) {
+                    apiClient.defaults.headers['Authorization'] = `Bearer ${action.payload.data.accessToken}`;
+                    state.isLogout = false;
+                    state.isAuthenticated = true;
+                }
             })
             .addCase(loginAsync.rejected, (state) => {
                 state.status = 'failed';
@@ -68,6 +73,7 @@ export const authSlice = createSlice({
             .addCase(logOutAsync.fulfilled, state => {
                 state.status = 'idle';
                 apiClient.defaults.headers['Authorization'] = null;
+                state.isLogout = true;
                 state.isAuthenticated = false;
             })
             .addCase(logOutAsync.rejected, state => {
@@ -79,7 +85,12 @@ export const authSlice = createSlice({
             })
             .addCase(reissueAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
-                setAuth(state, action);
+
+                if (action.payload && action.payload.status === 200 && action.payload.data) {
+                    apiClient.defaults.headers['Authorization'] = `Bearer ${action.payload.data}`;
+                    state.isLogout = false;
+                    state.isAuthenticated = true;
+                }
             })
             .addCase(reissueAsync.rejected, state => {
                 state.status = 'failed';
@@ -87,14 +98,7 @@ export const authSlice = createSlice({
     },
 });
 
-const setAuth = (state, action) => {
-    if (action.payload && action.payload.status === 200 && action.payload.data.accessToken) {
-        apiClient.defaults.headers['Authorization'] = `Bearer ${action.payload.data.accessToken}`;
-        state.isAuthenticated = true;
-    }
-}
-
 export const authSliceActions = {...authSlice.actions};
-export const selectAuth = (state: RootState) => state["auth"].accessToken;
+export const selectAuth = (state: RootState) => state.auth.isAuthenticated;
 
 export default authSlice.reducer;
